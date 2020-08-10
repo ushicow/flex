@@ -5,6 +5,7 @@ TODO
 2020.8.8 NEWDISK でブートセクタを書き込む
 NEWDISK で Track 0 を書き込む
 
+Memory MAP
 6809	6502	
 $FFFF   $7FFF
 		6809 reset vector   
@@ -12,6 +13,8 @@ $FFF0   $7FF0
 		Apple RWTS
 $F600	$7600
 		FLEX Loader
+$E100	$6100
+		6502 BIOS
 $E000	$6000
 		Disk Drivers
 $DE00	$5E00
@@ -30,8 +33,6 @@ $C000   $4000
 		Hi-Res Page 1
 $A000	$2000
 		(Free)
-$9000	$1000
-		6502 BIOS
 $8C00	$0C00
 		Text Page 2
 $8800	$0800	
