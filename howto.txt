@@ -6,68 +6,67 @@ TODO
 2020.8.12 NEWDISK で Track 0 を書き込む
 2020.8.13 Disk II コントローラのスロットを自動設定
 2020.8.13 The MILL のスロットを自動認識
+BIOS の書き直し
 
 Memory MAP
 6809	6502
-$FFFF   $7FFF
-		6809 reset vector   
-$FFF0   $7FF0
-		Apple RWTS
-$F600	$7600
-	
-$E200	$6200
-		FLEX Loader
-$E100	$6100
-		6502 BIOS
-$E000	$6000
-		Disk Drivers
-$DE00	$5E00
-		File Management-System
-$D400	$5400
-		Console I/O Drivers
-$D370	$5370
-		Disk Operating System
-$CD00	$4D00
-		FLEX Work Area
-$C700	$4700
-		Utility Area
-$C100	$4100
-		FLEX Work Area
-$C000   $4000
-		Hi-Res Page 1
-$A000	$2000
-		(Free)
-$8C00	$0C00
-		Text Page 2
-$8800	$0800	
-		Text Page 1
-$8400	$0400
-		Apple System
-$8000	$0000
-		Apple ROM
-$5000	$D000
-		Apple I/O
-$4000	$C000
-		FLEX User RAM 16KB
 $0000	$8000
+		FLEX User RAM 16KB
+$4000	$C000
+		Apple I/O
+$5000	$D000
+		Apple ROM (LC RAM)
+$8000	$0000
+		Apple System
+$8400	$0400
+		Text Page 1
+$8800	$0800	
+		Text Page 2
+$8C00	$0C00
+		(Free)
+$A000	$2000
+		Hi-Res Page 1
+$C000   $4000
+		FLEX System Stack
+$C080	$4080
+		FLEX Input Buffer
+$C100	$4100
+		Utility Area
+$C700	$4700
+		FLEX Work Area
+$CD00	$4D00
+		Disk Operating System
+$D370	$5370
+		Console I/O Drivers
+$D400	$5400
+		File Management-System
+$DE00	$5E00
+		Disk Drivers
+$E000	$6000
+		Apple BIOS		
+$E100	$6100
+		
+$E200	$6200
+		Free
+$F600	$7600
+		Apple RWTS
+$FFF0   $7FF0
+		6809 reset vector   
+$FFFF   $7FFF
 
+T0SA(A):MILLBIOS -> $6000 (6809 $E000)
+T0SB(8):Driver   -> $5E00 (6809 $DE00)
+T0SC(6):Console  -> $5300 (6809 $D300)
+T0SD(4):FLEXLOAD -> $6100 (6809 $E100)
+T0SE(2):TestUtil -> $6200 (6809 $E200)
+T0SF(F):OS9ERRRO -> $6200 (6809 $E300)
+T1S0(0):FLEXLOAD -> $4100 (6809 $C100)
 
-0	8
-1	9
-2	A
-3	B
-4	C
-5	D
-6	E
-7	F
-8	0
-9	1
-A	2
-B	3
-C	4
-D	5
-E	6
-F	7
+ゼロページ
+$06 6502セマフォフラグ
+$07 KEYLOC
+$08 TVLOC
+$09 MILL カードスロット x 16
 
 上記メモリマップで Apple DOS の Disk I/O を使うため、
 32K RAM システムで INIT したディスクのトラック 0 を取り出す。
@@ -117,6 +116,24 @@ flex	logical　physical
 3	C	6
 13	D	4
 7	E	2
+6	F	F
+
+flex	logical　physical
+1	0	0	
+12	7	1
+7	E	2
+2	6	3
+13	D	4
+8	5	5
+3	C	6
+14	4	7
+9	B	8
+4	3	9
+15	A	A
+10	2	B
+5	9	C
+16	1	D
+11	8	E
 6	F	F
 
 FLEX.CORの取り出し
@@ -217,6 +234,13 @@ BLOAD TESTUTIL.8100,D1,A$800
 CATALOG,D2
 2:0 E 2
 900G
+
+BLOAD OS9ERROR,D1,A$800
+CATALOG,D2
+2:0 F 2
+900G
+CATALOG,D1
+
 
 手動で flex を起動し、
 Drive 1 に a2flex.dsk を入れる (a2flex-before-link.dsk)
