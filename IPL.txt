@@ -9,7 +9,7 @@
 :1	INY
 	LDA ]1,Y
 	ORA #$80
-	JSR COUT1
+	JSR COUT
 	ASL
 	BNE :1
 	.EM
